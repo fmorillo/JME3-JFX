@@ -308,4 +308,23 @@ public class JmeToJfxIntegrator {
 
         return processor;
     }
+
+    /**
+     * Cleanup processor and stop application
+     *
+     * @param application the application
+     * @param processor   the processor
+     */
+
+    public static void destroy(
+            @NotNull JmeToJfxApplication application,
+            @NotNull FrameTransferSceneProcessor processor
+    ) {
+
+        EXECUTOR.addToExecute(() -> processor.cleanup());
+        while (processor.isInitialized()) {
+                Thread.yield();
+        }
+        application.stop(true);
+    }
 }
