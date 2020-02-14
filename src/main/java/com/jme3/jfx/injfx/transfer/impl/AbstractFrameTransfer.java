@@ -241,5 +241,13 @@ public abstract class AbstractFrameTransfer<T> implements FrameTransfer {
     protected void disposeImpl() {
         frameBuffer.dispose();
         BufferUtils.destroyDirectBuffer(frameByteBuffer);
+
+        if (transferMode == TransferMode.DOUBLE_BUFFERED) {
+            GL15.glDeleteBuffers(pixelBufferObjects[0].get(0));
+            GL15.glDeleteBuffers(pixelBufferObjects[1].get(0));
+
+            BufferUtils.destroyDirectBuffer(pixelBufferObjects[0]);
+            BufferUtils.destroyDirectBuffer(pixelBufferObjects[1]);
+        }
     }
 }
