@@ -34,7 +34,6 @@ public class JmeToJfxApplication extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         postProcessor = new FilterPostProcessor(assetManager);
-        postProcessor.initialize(renderManager, viewPort);
         viewPort.addProcessor(postProcessor);
     }
 
