@@ -1,6 +1,7 @@
 package com.jme3.jfx;
 
 import static com.jme3.jfx.injfx.processor.FrameTransferSceneProcessor.TransferMode;
+import com.jme3.jfx.injfx.processor.FrameTransferSceneProcessor;
 import com.jme3.jfx.injfx.JmeToJfxIntegrator;
 import com.jme3.jfx.injfx.JmeToJfxApplication;
 import com.jme3.input.KeyInput;
@@ -30,6 +31,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TestJmeToJfxCanvas extends Application {
 
+    private JmeToJfxApplication application;
+    private FrameTransferSceneProcessor processor;
+
     public static void main(@NotNull String[] args) {
         launch(args);
     }
@@ -43,7 +47,7 @@ public class TestJmeToJfxCanvas extends Application {
 
         var button = new Button("BUTTON");
         var stackPane = new StackPane(canvas, button);
-        var scene = new Scene(stackPane, 600, 600);
+        var scene = new Scene(stackPane, 800, 600);
 
         canvas.widthProperty()
                 .bind(stackPane.widthProperty());
@@ -53,13 +57,19 @@ public class TestJmeToJfxCanvas extends Application {
         stage.setTitle("Test");
         stage.setScene(scene);
         stage.show();
-        stage.setOnCloseRequest(event -> System.exit(0));
 
         // creates jME application
-        var application = makeJmeApplication();
+        application = makeJmeApplication();
 
         // integrate jME application with Canvas
-        JmeToJfxIntegrator.startAndBindMainViewPort(application, canvas, Thread::new, TransferMode.DOUBLE_BUFFERED);
+        processor = JmeToJfxIntegrator.startAndBindMainViewPort(application, canvas,
+                Thread::new, TransferMode.DOUBLE_BUFFERED);
+    }
+
+    @Override
+    public void stop() {
+        JmeToJfxIntegrator.destroy(application, processor);
+        System.exit(0);
     }
 
     private static @NotNull JmeToJfxApplication makeJmeApplication() {
