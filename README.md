@@ -6,16 +6,9 @@ JFX Gui bridge for JME with usefull utilities for common usecases
 License is the New BSD License (same as JME3) 
 http://opensource.org/licenses/BSD-3-Clause
 
-##### java compiler options
-```bash
---add-exports javafx.graphics/com.sun.javafx.embed=ALL-UNNAMED 
---add-exports javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED 
---add-exports javafx.graphics/com.sun.javafx.cursor=ALL-UNNAMED 
---add-exports javafx.graphics/com.sun.glass.ui=ALL-UNNAMED 
---add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
-```
-
 #### How to add the library to your project
+
+#### Gradle
 
 ```groovy
 repositories {
@@ -25,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.jme3:jfx:2.0.0'
+    implementation 'com.jme3:jfx:3.0.3'
 }
 ```
     
@@ -46,7 +39,7 @@ dependencies {
 <dependency>
     <groupId>com.jme3</groupId>
     <artifactId>jfx</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.3</version>
 </dependency>
 ```
 
@@ -56,10 +49,10 @@ dependencies {
 
     var imageView = new ImageView();
         
-    var settings = JmeToJfxIntegrator.prepareSettings(new AppSettings(true), 60);
+    var settings = JmeToJfxIntegrator.prepareSettings(new AppSettings(true));
     var application = new MySomeApplication();
     
-    JmeToJfxIntegrator.startAndBindMainViewPort(application, imageView, Thread::new);
+    JmeToJfxIntegrator.startAndBindMainViewPort(application, imageView, Thread::new, TransferMode.DOUBLE_BUFFERED);
 ```
 
 #### How to integrate javaFX UI to jME application:
@@ -97,6 +90,6 @@ dependencies {
 
 Also, you can look at some examples in the tests package:
 
-* [jME Application is inside jFX Canvas](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3x/jfx/TestJmeToJFXCanvas.java)
-* [jME Application is inside jFX ImageView](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3x/jfx/TestJmeToJFXImageView.java)
-* [JavaFX Scene is inside jME Application](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3x/jfx/TestJavaFxInJme.java)
+* [jME Application is inside jFX Canvas](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3/jfx/TestJmeToJfxCanvas.java)
+* [jME Application is inside jFX ImageView](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3/jfx/TestJmeToJfxImageView.java)
+* [JavaFX Scene is inside jME Application](https://github.com/JavaSaBr/JME3-JFX/blob/master/src/test/java/com/jme3/jfx/TestJfxInJme.java)
