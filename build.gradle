@@ -13,6 +13,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 ext {
+    bintrayVersion = version
     javafxVersion = '13'
     jetbrainsAnnotation = '19.0.0'
     jmonkeyVersion = '3.2.4-stable'
@@ -53,7 +54,7 @@ publishing {
             from components.java
             groupId group
             artifactId 'jfx'
-            version version
+            version bintrayVersion
             artifact sourcesJar
             artifact javadocJar
         }
@@ -74,8 +75,8 @@ bintray {
         githubRepo = 'JavaSaBr/JME3-JFX'
         githubReleaseNotesFile = 'README.md'
         version {
-            name = version
-            desc = version
+            name = bintrayVersion
+            desc = bintrayVersion
             released  = new Date()
         }
     }
