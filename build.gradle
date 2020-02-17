@@ -1,35 +1,22 @@
-import org.gradle.internal.os.OperatingSystem;
+import org.gradle.internal.os.OperatingSystem
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-    }
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
-
-apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
 
 group = 'com.jme3'
-version = '3.0.2'
-
-compileJava {
-    options.encoding = "UTF-8"
-    options.incremental = true
-}
+version = '3.0.3'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 ext {
-    bintrayVersion = version
-    javaFxVersion = "13"
-    jetbrainsAnnotation = "18.0.0"
-    jMonkeyVersion = "3.2.4-stable"
-    rlibVersion = "9.9.0"
+    javafxVersion = '13'
+    jetbrainsAnnotation = '19.0.0'
+    jmonkeyVersion = '3.2.4-stable'
+    rlibVersion = '9.9.0'
 }
 
 repositories {
@@ -37,8 +24,27 @@ repositories {
     mavenLocal()
     jcenter()
     maven {
-        url  "https://dl.bintray.com/javasabr/maven"
+        url  'https://dl.bintray.com/javasabr/maven'
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.incremental = true
+}
+
+tasks.withType(Javadoc) {
+    failOnError = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 publishing {
@@ -47,11 +53,9 @@ publishing {
             from components.java
             groupId group
             artifactId 'jfx'
-            version bintrayVersion
-            afterEvaluate {
-                artifact sourcesJar
-                artifact javadocJar
-            }
+            version version
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
 }
@@ -70,50 +74,36 @@ bintray {
         githubRepo = 'JavaSaBr/JME3-JFX'
         githubReleaseNotesFile = 'README.md'
         version {
-            name = bintrayVersion
-            desc = bintrayVersion
+            name = version
+            desc = version
             released  = new Date()
         }
     }
 }
 
 dependencies {
-    def targetArch = project.hasProperty('targetArch') ? project.property("targetArch") : 'x64'
+    def targetArch = project.hasProperty('targetArch') ? project.property('targetArch') : 'x64'
 
-    def osName = ""
+    def osName = ''
     if (OperatingSystem.current().isLinux()) {
-        osName = "linux"
+        osName = 'linux'
     } else if (OperatingSystem.current().isMacOsX()) {
-        osName = "mac"
+        osName = 'mac'
     } else if (OperatingSystem.current().isWindows()) {
-        osName = "win"
+        osName = 'win'
     }
 
+    compileOnly     "com.spaceshift:rlib.common:$rlibVersion"
+    api             "com.spaceshift:rlib.logger.impl:$rlibVersion"
     implementation  "org.jetbrains:annotations:$jetbrainsAnnotation"
-    implementation  "com.spaceshift:rlib.common:$rlibVersion"
-    implementation  "com.spaceshift:rlib.logger.impl:$rlibVersion"
-    implementation  "org.jmonkeyengine:jme3-core:$jMonkeyVersion"
-    implementation  "org.jmonkeyengine:jme3-lwjgl3:$jMonkeyVersion"
+    implementation  "org.jmonkeyengine:jme3-core:$jmonkeyVersion"
+    implementation  "org.jmonkeyengine:jme3-lwjgl3:$jmonkeyVersion"
 
-    if (targetArch == "x64" || targetArch == "x86") {
-        implementation "org.openjfx:javafx-base:$javaFxVersion:${osName}"
-        implementation "org.openjfx:javafx-controls:$javaFxVersion:${osName}"
-        implementation "org.openjfx:javafx-graphics:$javaFxVersion:${osName}"
+    if (targetArch == 'x64' || targetArch == 'x86') {
+        implementation "org.openjfx:javafx-base:$javafxVersion:${osName}"
+        implementation "org.openjfx:javafx-controls:$javafxVersion:${osName}"
+        implementation "org.openjfx:javafx-graphics:$javafxVersion:${osName}"
     }
-}
-
-javadoc {
-    failOnError = false
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
 }
 
 wrapper {
