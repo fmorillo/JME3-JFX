@@ -95,14 +95,17 @@ dependencies {
     }
 
     compileOnly     "com.spaceshift:rlib.common:$rlibVersion"
-    api             "com.spaceshift:rlib.logger.impl:$rlibVersion"
+    implementation  "com.spaceshift:rlib.logger.impl:$rlibVersion"
     implementation  "org.jetbrains:annotations:$jetbrainsAnnotation"
-    implementation  "org.jmonkeyengine:jme3-core:$jmonkeyVersion"
+    api             "org.jmonkeyengine:jme3-core:$jmonkeyVersion"
     implementation  "org.jmonkeyengine:jme3-lwjgl3:$jmonkeyVersion"
+    runtimeOnly     "org.jmonkeyengine:jme3-blender:$jmonkeyVersion"
+    runtimeOnly     "org.jmonkeyengine:jme3-jogg:$jmonkeyVersion"
+    runtimeOnly     "org.jmonkeyengine:jme3-plugins:$jmonkeyVersion"
 
     if (targetArch == 'x64' || targetArch == 'x86') {
+        api            "org.openjfx:javafx-controls:$javafxVersion:${osName}"
         implementation "org.openjfx:javafx-base:$javafxVersion:${osName}"
-        implementation "org.openjfx:javafx-controls:$javafxVersion:${osName}"
         implementation "org.openjfx:javafx-graphics:$javafxVersion:${osName}"
     }
 }
