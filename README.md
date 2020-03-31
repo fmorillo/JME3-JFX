@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.jme3:jfx:3.0.3'
+    implementation 'com.jme3:jfx:3.0.4'
 }
 ```
     
@@ -39,7 +39,7 @@ dependencies {
 <dependency>
     <groupId>com.jme3</groupId>
     <artifactId>jfx</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.4</version>
 </dependency>
 ```
 
