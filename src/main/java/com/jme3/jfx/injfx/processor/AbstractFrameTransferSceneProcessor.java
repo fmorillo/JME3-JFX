@@ -533,7 +533,7 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
 
             var frameBuffer = new FrameBuffer(width, height, 1);
             frameBuffer.setDepthBuffer(Image.Format.Depth);
-            frameBuffer.setColorBuffer(Image.Format.RGBA8);
+            frameBuffer.setColorBuffer(Image.Format.BGRA8);
             frameBuffer.setSrgb(true);
 
             viewPort.setOutputFrameBuffer(frameBuffer);
