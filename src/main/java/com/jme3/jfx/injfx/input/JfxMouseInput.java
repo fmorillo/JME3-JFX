@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class JfxMouseInput extends JfxInput implements MouseInput {
 
-    public static final String PROP_USE_LOCAL_COORDS = "JFX.mouseInput.useLocalCoords";
+    public static final String PROP_USE_GLOBAL_COORDS = "JFX.mouseInput.useGlobalCoords";
     public static final String PROP_INVERSE_Y_COORD = "JFX.mouseInput.inverseYCoord";
 
     private static final Map<MouseButton, Integer> MOUSE_BUTTON_TO_JME = new HashMap<>();
@@ -65,7 +65,7 @@ public class JfxMouseInput extends JfxInput implements MouseInput {
     private int mouseY;
     private int mouseWheel;
 
-    private boolean useLocalCoords;
+    private boolean useGlobalCoords;
     private boolean inverseYCoord;
 
     public JfxMouseInput(@NotNull JmeOffscreenSurfaceContext context) {
@@ -86,7 +86,7 @@ public class JfxMouseInput extends JfxInput implements MouseInput {
 
         var properties = node.getProperties();
 
-        useLocalCoords = properties.get(PROP_USE_LOCAL_COORDS) == Boolean.TRUE;
+        useGlobalCoords = properties.get(PROP_USE_GLOBAL_COORDS) == Boolean.TRUE;
         inverseYCoord = properties.get(PROP_INVERSE_Y_COORD) == Boolean.TRUE;
     }
 
@@ -148,7 +148,7 @@ public class JfxMouseInput extends JfxInput implements MouseInput {
         var sceneX = mouseEvent.getSceneX();
         var sceneY = mouseEvent.getSceneY();
 
-        if (!useLocalCoords) {
+        if (useGlobalCoords) {
             onCursorPos(sceneX, sceneY);
         } else {
 
