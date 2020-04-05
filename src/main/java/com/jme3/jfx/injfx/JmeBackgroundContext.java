@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.lwjgl.glfw.GLFW.*;
 
-
 /**
  * Overrides the runLoop {@link LwjglWindow} to fix the framerate limit
  */
@@ -15,8 +14,9 @@ public class JmeBackgroundContext extends LwjglOffscreenBuffer {
 
     private static final Logger LOGGER = Logger.getLogger(JmeBackgroundContext.class.getName());
 
-    private double frameSleepTime;
+    private long frameSleepTime;
     private int frameRateLimit = -1;
+    private long timeLeft;
 
     public JmeBackgroundContext(AppSettings settings) {
         super();
@@ -75,8 +75,16 @@ public class JmeBackgroundContext extends LwjglOffscreenBuffer {
         }
 
         if (frameRateLimit > 0) {
-            while (frameSleepTime > timer.getTime()) {
-                Thread.yield();
+            timeLeft = frameSleepTime - timer.getTime();
+            while (timeLeft > 15) {
+                if (timeLeft > 1500000) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {}
+                } else if (timeLeft > 1500) {
+                    Thread.yield();
+                }
+                timeLeft = frameSleepTime - timer.getTime();
             }
             timer.reset();
         }
@@ -86,6 +94,6 @@ public class JmeBackgroundContext extends LwjglOffscreenBuffer {
 
     private void setFrameRateLimit(int frameRateLimit) {
         this.frameRateLimit = frameRateLimit;
-        frameSleepTime = 1000000000.0 / this.frameRateLimit;
+        frameSleepTime = Math.round(1000000000.0 / this.frameRateLimit);
     }
 }
