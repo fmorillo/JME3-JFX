@@ -5,6 +5,7 @@ import com.jme3.jfx.injfx.JmeOffscreenSurfaceContext;
 import com.jme3.jfx.injfx.JmeToJfxApplication;
 import com.jme3.jfx.injfx.transfer.FrameTransfer;
 import com.jme3.jfx.util.JfxPlatform;
+import com.jme3.math.FastMath;
 import com.jme3.profile.AppProfiler;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -582,17 +583,19 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
 
         var viewPort = getViewPort();
         var camera = viewPort.getCamera();
-        var cameraAngle = getCameraAngle();
         var aspect = (float) camera.getWidth() / camera.getHeight();
+        var near = camera.getFrustumNear();
+        var far = camera.getFrustumFar();
+        var cameraAngle = getCameraAngle(camera.getFrustumTop(), near);
 
         if (isMain()) {
             getRenderManager().notifyReshape(width, height);
-            camera.setFrustumPerspective(cameraAngle, aspect, 1f, 10000);
+            camera.setFrustumPerspective(cameraAngle, aspect, near, far);
             return;
         }
 
         camera.resize(width, height, true);
-        camera.setFrustumPerspective(cameraAngle, aspect, 1f, 10000);
+        camera.setFrustumPerspective(cameraAngle, aspect, near, far);
 
         var processors = getGuiViewPort().getProcessors();
         var any = processors.stream()
@@ -619,13 +622,15 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
     }
 
     /**
-     * Gets camera angle.
+     * Gets camera angle (fovY).
      *
+     * @param top  the frustum top.
+     * @param near the frustum near.
      * @return the camera angle.
      */
-    protected int getCameraAngle() {
-        var angle = System.getProperty("jfx.frame.transfer.camera.angle", "45");
-        return Integer.parseInt(angle);
+    protected int getCameraAngle(float top, float near) {
+        var angle = 2.0f * FastMath.RAD_TO_DEG * FastMath.atan(top / near);
+        return Math.round(angle);
     }
 
     @Override
