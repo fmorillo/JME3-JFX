@@ -541,6 +541,7 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
         }
 
         reshapeCurrentViewPort(width, height);
+        application.reshape(width, height);
 
         var renderManager = getRenderManager();
         var frameBuffer = getGuiViewPort().getOutputFrameBuffer();

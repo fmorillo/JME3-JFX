@@ -37,6 +37,10 @@ public class JmeToJfxApplication extends SimpleApplication {
         viewPort.addProcessor(postProcessor);
     }
 
+    @Override
+    public void reshape(int w, int h) {
+    }
+
     /**
      * Get the post filter processor.
      *
