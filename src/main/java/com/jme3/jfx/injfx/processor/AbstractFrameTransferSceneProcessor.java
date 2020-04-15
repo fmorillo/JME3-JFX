@@ -585,18 +585,22 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
         var viewPort = getViewPort();
         var camera = viewPort.getCamera();
         var aspect = (float) camera.getWidth() / camera.getHeight();
+
         var near = camera.getFrustumNear();
         var far = camera.getFrustumFar();
-        var cameraAngle = getCameraAngle(camera.getFrustumTop(), near);
+        var top = camera.getFrustumTop();
+        var bottom = -top;
+        var right = top * aspect;
+        var left = -right;
 
         if (isMain()) {
             getRenderManager().notifyReshape(width, height);
-            camera.setFrustumPerspective(cameraAngle, aspect, near, far);
+            camera.setFrustum(near, far, left, right, top, bottom);
             return;
         }
 
         camera.resize(width, height, true);
-        camera.setFrustumPerspective(cameraAngle, aspect, near, far);
+        camera.setFrustum(near, far, left, right, top, bottom);
 
         var processors = getGuiViewPort().getProcessors();
         var any = processors.stream()
@@ -620,18 +624,6 @@ public abstract class AbstractFrameTransferSceneProcessor<T extends Node> implem
                 sceneProcessor.reshape(getGuiViewPort(), width, height);
             }
         }
-    }
-
-    /**
-     * Gets camera angle (fovY).
-     *
-     * @param top  the frustum top.
-     * @param near the frustum near.
-     * @return the camera angle.
-     */
-    protected int getCameraAngle(float top, float near) {
-        var angle = 2.0f * FastMath.RAD_TO_DEG * FastMath.atan(top / near);
-        return Math.round(angle);
     }
 
     @Override
