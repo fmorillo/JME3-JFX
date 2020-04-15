@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.jme3'
-version = '3.0.6'
+version = '3.0.7'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
